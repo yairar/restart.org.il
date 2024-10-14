@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+	///// Globals
+	var map, marker, infowindow, contentString;
+	var initialLatLng = {lat: 32.852422, lng: 35.75368945};
+	
+	function initMap() {
+	  
+		///// Map
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: initialLatLng,
+          zoom: 11 /*1: World, 5: Landmass/continent, 10: City, 15: Streets, 20: Buildings*/
+        });
+		
+		///// Marker
+		marker = new google.maps.Marker({
+			position: initialLatLng,
+			map: map,
+			draggable: true,
+			animation: google.maps.Animation.DROP,
+			title: 'Israel'
+		});
+		marker.addListener('click', getPosition);
+		
+		///// Info window
+		contentString = '<div id="content">'+
+             '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">שם העסק</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>שם העסק</b>, תיאור קצר</b> ' +
+            '<p><a href="https://www.golanjobs.co.il/he/pages/%D7%90%D7%99%D7%A0%D7%93%D7%A7%D7%A1-%D7%A2%D7%A1%D7%A7%D7%99%D7%9D-%D7%92%D7%95%D7%9C%D7%9F" target="_blank">'+
+            'אינדקס עסקי הגולן</a> '+
+            '</div>'+
+            '</div>';
+		
+	} /* initMap */
+	
+			
+	function getPosition() {
+		
+		// Close previous infowindow if was not closed by user
+		if (infowindow) {
+			infowindow.close();
+		}
+		var position = marker.getPosition().toString();
+		console.info(position);
+		
+		var newContentString = contentString + position;
+		infowindow = new google.maps.InfoWindow({
+			  content: newContentString,
+			  maxWidth: 400
+			});
+		infowindow.open(map, marker);
+	}
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDL_LrDQpeDpi6MlIEBiZLVaBadlZyn_c&callback=initMap" type="text/javascript">
+    </script>
+  </body>
+</html>
